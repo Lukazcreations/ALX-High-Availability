@@ -46,11 +46,11 @@ Resources:
           ToPort: 65535
           CidrIp: 0.0.0.0/0
 
-  S3ReadOnlyEC2InstanceProfile:
+  UdacityS3ReadOnlyEC2:
     Type: AWS::IAM::InstanceProfile
     Properties:
       Roles:
-        - S3ReadOnlyEC2InstanceProfile
+        - UdacityS3ReadOnlyEC2
 
   WebServerAutoScalingLaunchConfig:
     Type: AWS::AutoScaling::LaunchConfiguration
@@ -66,8 +66,7 @@ Resources:
           unzip -o udagram_udacity.zip
           systemctl start apache2.service
       ImageId: ami-0cff7528ff583bf9a
-      KeyName: !Sub "${EnvironmentName}-KeyName"
-      IamInstanceProfile: !Ref S3ReadOnlyEC2InstanceProfile # This EC2 IAM role had to be created first
+      IamInstanceProfile: !Ref UdacityS3ReadOnlyEC2 # This EC2 IAM role had to be created first
       SecurityGroups:
         - Ref: WebServerSecGroup
       InstanceType: t3.medium
@@ -95,7 +94,7 @@ Resources:
     Type: AWS::AutoScaling::AutoScalingGroup
     Properties:
       VPCZoneIdentifier:
-        - Fn::ImportValue: !Sub "${EnvironmentName}-PRIVATE-NETS"
+        - Fn::ImportValue: !Sub "${EnvironmentName}-PRIV-NETS"
       LaunchConfigurationName:
         Ref: WebServerAutoScalingLaunchConfig
       MinSize: "4"
@@ -107,8 +106,8 @@ Resources:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
       Subnets:
-        - Fn::ImportValue: !Sub "${EnvironmentName}-PUBLIC1-SN"
-        - Fn::ImportValue: !Sub "${EnvironmentName}-PUBLIC2-SN"
+        - Fn::ImportValue: !Sub "${EnvironmentName}-PUB1-SN"
+        - Fn::ImportValue: !Sub "${EnvironmentName}-PUB2-SN"
       SecurityGroups:
         - Ref: LoadBalancerSecGroup
 
