@@ -26,5 +26,5 @@ You can run the supporting material in two easy steps:
 # Create servers
 # Change the AMI ID and key-pair name in the servers.yml
 # Check the region in the update.sh file
-./update.sh mySecStack servers.yml server-parameters.json
+./update.sh myservStack servers.yml server-parameters.json
 ```
