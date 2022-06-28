@@ -59,17 +59,15 @@ Resources:
         Fn::Base64: !Sub |
           #!/bin/bash
           apt-get update -y
-          apt-get install unzip awscli -y
           apt-get install apache2 -y
-          cd /var/www/html
-          aws s3 cp s3://mylabbucket93/udagram_udacity.zip .
-          unzip -o udagram_udacity.zip
           systemctl start apache2.service
-      ImageId: ami-0cff7528ff583bf9a
+          cd /var/www/html
+          echo "Udacity Demo Web Server Up and Running!" > index.html
+      ImageId: ami-0729e439b6769d6ab
       IamInstanceProfile: !Ref UdacityS3ReadOnlyEC2 # This EC2 IAM role had to be created first
       SecurityGroups:
         - Ref: WebServerSecGroup
-      InstanceType: t3.medium
+      InstanceType: t2.micro
       BlockDeviceMappings:
         - DeviceName: "/dev/sdk"
           Ebs:
